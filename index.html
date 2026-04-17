@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple - X Ai | Code Generator</title>
+    <style>
+        body { background: #0a0a0a; color: #e0e0e0; font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background: #151515; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 90%; max-width: 700px; text-align: center; border: 1px solid #333; }
+        h1 { color: #fff; margin-bottom: 5px; }
+        h1 span { color: #007bff; }
+        p { color: #888; font-size: 14px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #202020; color: #fff; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        button:hover { background: #0056b3; }
+        #output { margin-top: 20px; text-align: left; background: #000; padding: 15px; border-radius: 10px; display: none; max-height: 400px; overflow-y: auto; white-space: pre-wrap; color: #00ff88; font-family: 'Courier New', monospace; border: 1px solid #222; }
+        .loading { color: #ffcc00; margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Apple - X <span>Ai</span></h1>
+        <p>ලොව ඕනෑම වෙබ් අඩවියක Source Code එක විනාඩියෙන් ලබාගන්න</p>
+        
+        <input type="text" id="prompt" placeholder="වෙබ් අඩවියේ විස්තරය (උදා: Luxury Watch Store)">
+        <input type="text" id="tech" placeholder="භාවිතා කළ යුතු භාෂා (උදා: HTML, CSS, JS, PHP)">
+        
+        <button onclick="generateCode()">Generate Source Code</button>
+        
+        <div id="loading" class="loading">Apple - X Ai කේතය නිර්මාණය කරමින් පවතී...</div>
+        <div id="output"></div>
+    </div>
+
+    <script>
+        async function generateCode() {
+            const prompt = document.getElementById('prompt').value;
+            const tech = document.getElementById('tech').value;
+            const output = document.getElementById('output');
+            const loading = document.getElementById('loading');
+
+            if(!prompt || !tech) { alert("කරුණාකර සියලු විස්තර ඇතුළත් කරන්න."); return; }
+
+            loading.style.display = 'block';
+            output.style.display = 'none';
+
+            try {
+                // සර්වර් එකට සම්බන්ධ වීම (මෙහි URL එක ඔබේ සර්වර් URL එකට පසුව මාරු කරන්න)
+                const response = await fetch('http://127.0.0.1:8000/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt, tech_stack: tech })
+                });
+
+                const result = await response.json();
+                loading.style.display = 'none';
+                output.style.display = 'block';
+                
+                // ලැබෙන JSON එක ලස්සනට පෙන්වීම
+                const codeData = JSON.parse(result.data);
+                output.innerText = JSON.stringify(codeData, null, 4);
+            } catch (error) {
+                loading.style.display = 'none';
+                alert("Error: සර්වර් එක සමඟ සම්බන්ධ වීමට නොහැකි විය.");
+            }
+        }
+    </script>
+</body>
+</html>
